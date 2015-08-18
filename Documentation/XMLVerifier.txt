@@ -1,0 +1,55 @@
+Public Class WebVerifier
+
+This class takes files and validates them against XML schema and schematron files.  It will output text indicating pass or fail, and write to a log in the form of comma separated values.
+
+Dependencies:
+org.xml.sax.ErrorHandler
+org.xml.sax.SAXException;
+org.xml.sax.SAXParseException;
+org.probatron.Driver;
+javax.xml.XMLConstants;
+javax.xml.transform.Source;
+javax.xml.transform.stream.StreamSource;
+javax.xml.validation.Schema;
+javax.xml.validation.SchemaFactory;
+javax.xml.validation.Validator;
+java.io.*;
+java.util.LinkedList;
+java.util.List;
+
+Constructors:
+public(String place, PrintWriter log, PrintWriter output)
+In addition to constructing the object, this checks if the file presented is actually a xml file.  If so, it then passes the file onto the "main" method.
+
+Methods:
+public void Verify(String place, PrintWriter log, PrintWriter output, boolean isWCS)
+This is the method that validates the manifest and writes the result to its logs.  It uses probation and the java specification for xml validation to do so.  The method initializes the validator programs and reads their output streams to determine the success of the validation.
+
+public File convertToFile(InputStream in)
+Because this program is stored as a java archive(.jar), its resources can only be recalled as InputStream objects.  In order to convert those streams to files, this method is called.  It creates a temporary file that holds the input stream data.  This is necessary in order for the schematron validation to run correctly.
+
+List<String>bustCommas(List<String> list)
+Due to the way comma separated values(.csv) files operate, all commas and quotes need to be escaped before they are exported. This method serves that purpose.  It will put quotes around every item in a List<String> so that it will be in an acceptable format for a spreadsheet application.
+
+Note: All following methods chop up the error streams from the verifiers and sort them into Lists to be exported to the log.  That way, a .csv log can easily be kept in sync when multiple errors occur.
+
+String xsdRow(String str)
+Chops up output streams from schema validation and returns the line number of an error.
+
+String xsdError(String str)
+Chops up output streams from schema validation and returns a short description of the validation error.
+
+String xsdCol(String str)
+Chops up output stream from schema validation and returns the character number of an error.
+
+String tronErr(String str)
+Chops up output stream from schematron validation and returns a short description of the validation error.
+
+String tronCol(String str)
+Chops up output stream from schematron validation and returns the character number of an error.
+
+String tronRow(String str)
+Chops up output stream from schematron validation and returns the character number of an error.
+
+String tronErrLoc(String str)
+Chops up output stream from schematron validation and returns the file that caused the error.

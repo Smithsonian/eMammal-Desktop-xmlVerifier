@@ -1,0 +1,20 @@
+public class RunVerifier
+
+This class initializes the GUI behind the verifier program and processes user input. In addition, it boots up the main validation program.
+
+Dependencies:
+java.awt.*
+java.awt.event.ActionEvent
+java.awt.event.ActionListener
+java.util.*
+java.io.*
+java.net.URISyntaxException
+java.util.List
+javax.swing.*
+
+Constructors:
+None required. This object handles the main method.
+
+Methods:
+public void main(String[] args)
+Creates a JFrame holding a JScrollpane, JTextArea and JTextfield. These are the I/O of the program.  Once initialized, the program will wait for the user to put an absolute URL in the text area. It will then create a xmlVerifier, which starts the validation.  This method also checks if the files specified by the user actually exist before passing them along to the xmlVerifier.

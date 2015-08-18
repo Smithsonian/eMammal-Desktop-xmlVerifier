@@ -48,7 +48,7 @@ public class xmlVerifier{
 		String nl = System.getProperty("line.separator");
 		if(place1.lastIndexOf("/")==-1) //If file/directory location does not include a "/", as in foo.xml
 			localPlace=place1;
-		else {                              
+		else {
 			localPlace = place1.substring(place1.lastIndexOf("/", place1.length() - 1));
 		}
 		if(place1.length()<4) {
@@ -72,11 +72,11 @@ public class xmlVerifier{
 	 catch (java.net.URISyntaxException e2){
 		 out.append("System error: Invalid manifest file."+nl);
 	}						//This should also never happen
-    catch (Exception e1){                                   //DEBUG PURPOSES ONLY
+ /*   catch (Exception e1){                                   //DEBUG PURPOSES ONLY
         StackTraceElement[] e3=e1.getStackTrace();
         for(int x=0;x<e3.length;x++)
             out.append(e3[x].getLineNumber()+e3[x].getMethodName()+" "+e3[x].getClassName());                                                   //XSD Validation
-    }
+    }*/
 	}
 	public void Verify(String place, PrintWriter log, JTextArea out) throws SAXException, IOException, java.net.URISyntaxException
 	{
@@ -125,6 +125,7 @@ public class xmlVerifier{
             }
 		}proc.destroy();
 		} catch (Exception e){
+            log.println(localPlace + "," + place + ",N,Invalid File location,N/A,N/A,N/A");
             log.println(localPlace + "," + place + "," + "N" + "," + "Invalid File location" + "," + "N/A" + "," + "N/A" + "," + "N/A");
 		}
 
