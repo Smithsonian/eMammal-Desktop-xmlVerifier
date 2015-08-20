@@ -24,6 +24,10 @@
  * This distribution includes several third-party libraries, each with their own
  * license terms. For a complete copy of all copyright and license terms, including
  * those of third-party libraries, please see the product release notes.
+ *
+ * @author Charles Stern
+ * @version 1.0
+ * @since 2015-08-21
  */
 package edu.SI;
 
@@ -37,7 +41,12 @@ import java.util.List;
 import javax.swing.*;
 
 public class RunVerifier {
-	public static void main(String[] args) throws URISyntaxException, IOException{
+    /**
+     * Main method creates GUI and runs xmlVerifier inside of it
+     * @param args is not used. Main should be executed by double-click on Jar.
+     * @throws FileNotFoundException Thrown if the log couldn't be created for some odd reason
+     */
+	public static void main(String[] args) throws  FileNotFoundException{
 		PrintWriter log;
 		String loc;
 		String nl=System.getProperty("line.separator");
