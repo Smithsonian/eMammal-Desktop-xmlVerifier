@@ -24,6 +24,7 @@
  * This distribution includes several third-party libraries, each with their own
  * license terms. For a complete copy of all copyright and license terms, including
  * those of third-party libraries, please see the product release notes.
+ *
  */
 package edu.SI;
 
@@ -43,6 +44,12 @@ import java.util.List;
 import java.io.*;
 
 public class xmlVerifier{
+    /**
+     * Checks if the file is valid XML before proceeding with validation
+     * @param place1 File location on local file system
+     * @param log Log file, located as the same directory as the .jar. Detailed output.
+     * @param out Generic output, in this case a JTextarea
+     */
 	public xmlVerifier(String place1, PrintWriter log, JTextArea out){
 		String localPlace;
 		String nl = System.getProperty("line.separator");
@@ -62,40 +69,42 @@ public class xmlVerifier{
             return;}
 	try {
 		Verify(place1, log, out);
-	} catch (IOException e) {
-		out.append("System error: Failed to create log file."+nl);
-	}			//above exception should not happen ever
+	} 			//above exception should not happen ever
 	  catch (SAXException e1){
 		  out.append("Error reading file " + localPlace + ". It may be corrupt or invalid." + nl);
-          log.println(localPlace+","+place1+","+"N"+","+"Corrupt/Invalid file"+","+"N/A"+","+"N/A"+","+"N/A");
-	  }			//triggered by user error
-	 catch (java.net.URISyntaxException e2){
-		 out.append("System error: Invalid manifest file."+nl);
-	}						//This should also never happen
-    catch (Exception e1){                                   //DEBUG PURPOSES ONLY
+          log.println(localPlace + "," + place1 + "," + "N" + "," + "Corrupt/Invalid file" + "," + "N/A" + "," + "N/A" + "," + "N/A");
+	  }
+ /*   catch (Exception e1){                                   //DEBUG PURPOSES ONLY
         StackTraceElement[] e3=e1.getStackTrace();
         for(int x=0;x<e3.length;x++)
             out.append(e3[x].getLineNumber()+e3[x].getMethodName()+" "+e3[x].getClassName());                                                   //XSD Validation
-    }
+    }*/
 	}
-	public void Verify(String place, PrintWriter log, JTextArea out) throws SAXException, IOException, java.net.URISyntaxException
+
+    /**
+     * Validates manifests against XML schema and schematron.
+     * @param place File location on local file system
+     * @param log Log file, located as the same directory as the .jar. Detailed output.
+     * @param out Generic output, in this case a JTextarea
+     * @throws SAXException Thrown if the file given is not valid XML, it should have been caught earlier however.
+     */
+	public void Verify(String place, PrintWriter log, JTextArea out) throws SAXException
 	{
 		String line, line2;
-        boolean lineIsNull=false;
         boolean errIsNull=false;
         boolean tron=true;
         boolean sch=false;
         boolean result=true;
         List<String> Error= new LinkedList<String>();
-        List<String> Row = new LinkedList<String>();     //Little experience with arrays of Lists, so this will stay ugly for now.
+        List<String> Row = new LinkedList<String>();
         List<String> Column = new LinkedList<String>();
         List<String> ErrLoc = new LinkedList<String>();
 		final String nl = System.getProperty("line.separator");
 
 		ClassLoader cl = this.getClass().getClassLoader();
-		InputStream Schematron = cl.getClass().getResourceAsStream("/eMammalDeploymentManifestFinal.sch");
-		InputStream XSD = cl.getClass().getResourceAsStream("/eMammalDeploymentManifest2015Final.xsd");  //fetches resources from jarfile
-        String localPlace = place.substring(place.lastIndexOf("/")+1, place.length());	//OUT OF DATE, wait for replacements from data architect
+		InputStream Schematron = cl.getClass().getResourceAsStream("/eMammalDeploymentManifest2015Final.sch");
+		InputStream XSD = cl.getClass().getResourceAsStream("/eMammalDeploymentManifest2015Final.xsd");  //fetches resources from jar file
+        String localPlace = place.substring(place.lastIndexOf("/")+1, place.length());
 		File tronFile = convertToFile(Schematron);
 		try{
 			Process proc = Runtime.getRuntime().exec("java -cp * org.probatron.Driver "+place+" "+tronFile);
@@ -188,6 +197,12 @@ public class xmlVerifier{
          for(int l=0; l<Error.size();l++)
              log.println(localPlace + "," + place + "," + "N" + "," + Error.get(l) + "," + ErrLoc.get(l) + "," + Row.get(l) + "," + Column.get(l));
     }
+
+    /**
+     * Converts InputStream of schema to File so it can be processed by third-party program
+     * @param in InputStream of schema
+     * @return File of schema
+     */
 	public File convertToFile(InputStream in){
 		File tronFile = new File("temp.sch");
 		tronFile.deleteOnExit();
@@ -207,41 +222,84 @@ public class xmlVerifier{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}return tronFile;
-	}                           //All following methods chop up the error streams from the verifiers and sort them into Lists to be exported
+	}
+    /**
+     * Fetches column number of error from output
+     * @param str the output
+     * @return the column number
+     */
     String xsdCol(String str){
         return str.substring(str.indexOf(":", str.indexOf("columnNumber"))+1, str.indexOf(";", str.indexOf("columnNumber")));
     }
-    List<String> bustCommas(List<String> list){ //Except this method, which escapes commas and quotes in the Lists.
+
+    /**
+     * Puts every item in each List in quotes to prevent comma issues in .csv
+     * @param list List that needs to be fool-proofed
+     * @return Same List with brand new quotes around each element
+     */
+    List<String> bustCommas(List<String> list){
         for(int k=0;k<list.size();k++){
             list.set(k,"\""+list.get(k)+"\"");
         }
-     return list;
+        return list;
     }
+    /**
+     * Fetches line number of error from output
+     * @param str the output
+     * @return the line number
+     */
     String xsdRow(String str){
-       return str.substring(str.indexOf("lineNumber:")+11,str.indexOf(";", str.indexOf("lineNumber:")-1));
+        return str.substring(str.indexOf("lineNumber:")+11,str.indexOf(";", str.indexOf("lineNumber:")-1));
     }
+    /**
+     * Fetches error summary from output
+     * @param str the output
+     * @return the summary
+     */
     String xsdError(String str){
         return str.substring(str.indexOf(":", str.indexOf("columnNumber:")+14)+1,str.length());
     }
+    /**
+     * Fetches error summary from output
+     * @param str the output
+     * @return the summary
+     */
     String tronErr(String str){
         String p1=""; String p2="";
         if(str.contains("svrl:text"))
-        p2 = str.substring(str.indexOf("svrl:text")+10, str.lastIndexOf("svrl:text")-2);
+            p2 = str.substring(str.indexOf("svrl:text")+10, str.lastIndexOf("svrl:text")-2);
         if((p1 + p2).equals(""))
             return str;
         return p1+p2;
     }
+    /**
+     * Fetches column number of error from output
+     * @param str the output
+     * @return the column number
+     */
     String tronCol(String str){
-            String result= str.substring(str.indexOf("col=")+4, str.lastIndexOf(">"));
+        String result= str.substring(str.indexOf("col=")+4, str.lastIndexOf(">"));
         while(result.contains("\""))
             result=result.substring(0,result.indexOf("\""))+result.substring(result.indexOf("\"")+1, result.length());
         return result;}
+    /**
+     * Fetches line number of error from output
+     * @param str the output
+     * @return the line number
+     */
     String tronRow(String str){
-            String result= str.substring(str.indexOf("line=")+5,str.lastIndexOf("col=")-1);
+        String result= str.substring(str.indexOf("line=")+5,str.lastIndexOf("col=")-1);
         while(result.contains("\""))
             result=result.substring(0,result.indexOf("\""))+result.substring(result.indexOf("\"")+1, result.length());
         return result;}
+
+    /**
+     * Fetches the location of the error in the file
+     * @param str the output
+     * @return error location
+     */
     String tronErrLoc(String str){
-      return str.substring(str.indexOf("location=\"")+10, str.indexOf("\"", str.indexOf("location=\"")+11));
+        return str.substring(str.indexOf("location=\"")+10, str.indexOf("\"", str.indexOf("location=\"")+11));
     }
+
 }
