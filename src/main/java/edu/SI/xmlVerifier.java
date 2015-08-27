@@ -116,6 +116,7 @@ public class xmlVerifier{
             if(!line.contains("xml version=")){
                 if(line2.equals(""))
                     break;
+                tron=false;
                 Error.add(tronErr(line2));
                 Row.add(tronRow(line));
                 Column.add(tronCol(line));
@@ -173,7 +174,7 @@ public class xmlVerifier{
 		  if(exceptions.size()==0)
               sch=true;
 		  else
-              for (int i = 1; i < exceptions.size(); i++) {
+              for (int i = 0; i < exceptions.size(); i++) {
                   Error.add(xsdError(exceptions.get(i).toString()));
                   Row.add(xsdRow(exceptions.get(i).toString()));
                   Column.add(xsdCol(exceptions.get(i).toString()));
@@ -182,7 +183,7 @@ public class xmlVerifier{
                       sch = false;
                   //loop returns errors
               }
-        if((sch && tron)&& sch)
+        if(sch && tron)
             out.append(localPlace+" has PASSED validation."+nl);
         else{
                 out.append(localPlace + " has FAILED validation.  Errors have been noted in the log." + nl);
