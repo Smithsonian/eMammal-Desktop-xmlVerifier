@@ -111,7 +111,7 @@ public class RunVerifier {
 				String[] names = count.list();
 			output.setPreferredSize(new Dimension(750, 25*names.length)); //Extends the output field as far as it needs to go
 			scroll.setPreferredSize(new Dimension(750, 25*names.length));
-				for(int j=names.length-1;j>0;j--){
+				for(int j=names.length-1;j>=0;j--){
 					names[j]=loc+names[j];
 				new xmlVerifier(names[j], log, output);} 	//Multiple files method
 			}
