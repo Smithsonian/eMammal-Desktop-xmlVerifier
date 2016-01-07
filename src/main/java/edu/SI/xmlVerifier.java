@@ -102,8 +102,8 @@ public class xmlVerifier{
 		final String nl = System.getProperty("line.separator");
 
 		ClassLoader cl = this.getClass().getClassLoader();
-		InputStream Schematron = cl.getClass().getResourceAsStream("/WCSDeploymentManifestFinal.sch");
-		InputStream XSD = cl.getClass().getResourceAsStream("/WCSDeploymentManifest2015Final.xsd");  //fetches resources from jar file
+		InputStream Schematron = cl.getClass().getResourceAsStream("/WCSDeploymentManifest.sch");
+		InputStream XSD = cl.getClass().getResourceAsStream("/WCSDeploymentManifest.xsd");  //fetches resources from jar file
         String localPlace = place.substring(place.lastIndexOf("/")+1, place.length());
 		File tronFile = convertToFile(Schematron);
 		try{
