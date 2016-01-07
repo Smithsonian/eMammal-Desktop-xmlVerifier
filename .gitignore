@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.idea
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+*.iml
+*.iws
+.DS_Store
+.project
+.settings/
+target/
+.classpath
