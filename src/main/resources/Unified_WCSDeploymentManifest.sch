@@ -38,14 +38,14 @@
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-Owner">
-        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner">
+        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner/ProjectOwnerName">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project owner</iso:assert>  
         </iso:rule>
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-Owneremail">
-        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwnerEmail">
+        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner/ProjectOwnerEmail">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project owner email</iso:assert>          
         </iso:rule>
