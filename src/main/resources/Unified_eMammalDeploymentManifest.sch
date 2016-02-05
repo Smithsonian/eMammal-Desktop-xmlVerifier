@@ -42,14 +42,14 @@
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-Owner">
-        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner">
+        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner/ProjectOwnerName">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project owner</iso:assert>  
          </iso:rule>
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-Owneremail">
-        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwnerEmail">
+        <iso:rule context="CameraTrapDeployment/ProjectOwners/ProjectOwner/ProjectOwnerEmail">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project owner email</iso:assert>          
         </iso:rule>
@@ -57,14 +57,14 @@
     
     
     <iso:pattern id="required-fields-check-PI">
-        <iso:rule context="CameraTrapDeployment/PrincipalInvestigators/PrincipalInvestigator">
+        <iso:rule context="CameraTrapDeployment/PrincipalInvestigators/PrincipalInvestigator/PrincipalInvestigatorName">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a principal investigator</iso:assert>
             </iso:rule>
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-PI-email">
-        <iso:rule context="CameraTrapDeployment/PrincipalInvestigators/PrincipalInvestigatorEmail">
+        <iso:rule context="CameraTrapDeployment/PrincipalInvestigators/PrincipalInvestigator/PrincipalInvestigatorEmail">
             
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a principal investigator email</iso:assert>
@@ -72,14 +72,14 @@
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-project-contact">
-        <iso:rule context="CameraTrapDeployment/ProjectContacts/ProjectContact">
+        <iso:rule context="CameraTrapDeployment/ProjectContacts/ProjectContact/ProjectContactName">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project contact</iso:assert>
         </iso:rule>
     </iso:pattern>
     
     <iso:pattern id="required-fields-check-project-contactemail">
-        <iso:rule context="CameraTrapDeployment/ProjectContacts/ProjectContactEmail">
+        <iso:rule context="CameraTrapDeployment/ProjectContacts/ProjectContact/ProjectContactEmail">
             <iso:assert
                 test="string-length(normalize-space(.)) &gt; 0">A camera deployment must have a project contact email</iso:assert>
         </iso:rule>
