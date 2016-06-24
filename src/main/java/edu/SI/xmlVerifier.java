@@ -46,33 +46,35 @@ import java.io.*;
 public class xmlVerifier{
     /**
      * Checks if the file is valid XML before proceeding with validation
-     * @param place1 File location on local file system
+     * @param filePath File location on local file system
      * @param log Log file, located as the same directory as the .jar. Detailed output.
      * @param out Generic output, in this case a JTextarea
      */
-	public xmlVerifier(String place1, PrintWriter log, JTextArea out){
+	public xmlVerifier(String filePath, PrintWriter log, JTextArea out){
 		String localPlace;
 		String nl = System.getProperty("line.separator");
-		if(place1.lastIndexOf("/")==-1) //If file/directory location does not include a "/", as in foo.xml
-			localPlace=place1;
+        String preparedFilePath = prepareFilePath(filePath);
+
+		if(preparedFilePath.lastIndexOf(File.separator)==-1) //If file/directory location does not include a "/", as in foo.xml
+			localPlace=preparedFilePath;
 		else {
-			localPlace = place1.substring(place1.lastIndexOf("/", place1.length() - 1));
+			localPlace = preparedFilePath.substring(preparedFilePath.lastIndexOf(File.separator, preparedFilePath.length() - 1));
 		}
-		if(place1.length()<4) {
+		if(preparedFilePath.length()<4) {
             out.append("Invalid Filename on file " + localPlace + nl);
-            log.println(localPlace+","+place1+","+"N"+","+"Invalid filename"+","+"N/A"+","+"N/A"+","+"N/A");
+            log.println(localPlace+","+preparedFilePath+","+"N"+","+"Invalid filename"+","+"N/A"+","+"N/A"+","+"N/A");
             return;
         }                                       //statements exist to crash the program smoothly
-        if(!place1.substring(place1.length()-4, place1.length()).equals(".xml")){
+        if(!preparedFilePath.substring(preparedFilePath.length()-4, preparedFilePath.length()).equals(".xml")){
 			out.append(localPlace + " has an incorrect file extension. Skipping file " + localPlace + "."+nl);
-            log.println(localPlace+","+place1+","+"N"+","+"Invalid file extension"+","+"N/A"+","+"N/A"+","+"N/A");
+            log.println(localPlace+","+preparedFilePath+","+"N"+","+"Invalid file extension"+","+"N/A"+","+"N/A"+","+"N/A");
             return;}
 	try {
-		Verify(place1, log, out);
+		Verify(preparedFilePath, log, out);
 	} 			//above exception should not happen ever
 	  catch (SAXException e1){
 		  out.append("Error reading file " + localPlace + ". It may be corrupt or invalid." + nl);
-          log.println(localPlace + "," + place1 + "," + "N" + "," + "Corrupt/Invalid file" + "," + "N/A" + "," + "N/A" + "," + "N/A");
+          log.println(localPlace + "," + preparedFilePath + "," + "N" + "," + "Corrupt/Invalid file" + "," + "N/A" + "," + "N/A" + "," + "N/A");
 	  }
  /*   catch (Exception e1){                                   //DEBUG PURPOSES ONLY
         StackTraceElement[] e3=e1.getStackTrace();
@@ -104,10 +106,12 @@ public class xmlVerifier{
 		ClassLoader cl = this.getClass().getClassLoader();
 		InputStream Schematron = cl.getClass().getResourceAsStream("/Unified_WCSDeploymentManifest.sch");
 		InputStream XSD = cl.getClass().getResourceAsStream("/Unified_WCSDeploymentManifest.xsd");  //fetches resources from jar file
-        String localPlace = place.substring(place.lastIndexOf("/")+1, place.length());
+        String localPlace = place.substring(place.lastIndexOf(File.separator)+1, place.length());
 		File tronFile = convertToFile(Schematron);
 		try{
-			Process proc = Runtime.getRuntime().exec("java -cp * org.probatron.Driver "+place+" "+tronFile);
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-cp", "*", "org.probatron.Driver", place, tronFile.getName());
+            Process proc = processBuilder.start();
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		BufferedReader err = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 		for(;;){
@@ -139,7 +143,7 @@ public class xmlVerifier{
             log.println(localPlace + "," + place + "," + "N" + "," + "Invalid File location" + "," + "N/A" + "," + "N/A" + "," + "N/A");
 		}
 
-		Source xmlFile = new StreamSource(new File(place));
+		Source xmlFile = new StreamSource(place);
 		Source schemaSource = new StreamSource(XSD);
 		System.setProperty("java.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 		SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
@@ -197,6 +201,18 @@ public class xmlVerifier{
             log.println(localPlace + "," + place + "," + "Y" + "," +"N/A" +  "," +"N/A"+  "," +"N/A"+ ","+"N/A");
          for(int l=0; l<Error.size();l++)
              log.println(localPlace + "," + place + "," + "N" + "," + Error.get(l) + "," + ErrLoc.get(l) + "," + Row.get(l) + "," + Column.get(l));
+    }
+
+    /**
+     * Appends local file protocol (i.e. file:///) to the file path for probatron to correctly handle the xml local path location
+     * on Windows OS and Mac OS.
+     *
+     * @param xmlLocation
+     * @return
+     */
+    private String prepareFilePath(String xmlLocation){
+        String fileProtocal = "file:" + File.separator + File.separator + File.separator;
+        return fileProtocal + xmlLocation;
     }
 
     /**
