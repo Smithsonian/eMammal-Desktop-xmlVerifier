@@ -63,7 +63,7 @@ public class RunVerifier {
 		output.setEditable(false);
 		output.setLineWrap(true);			//GUI creation and setup
 		output.setPreferredSize(new Dimension(1000, 300));
-		output.append("Input a file or directory to be verified. Directories must end in a '/'." + nl);
+		output.append("Input a file or directory to be verified. Directories must end in a '" + File.separator + "'." + nl);
         output.append("Note that if a file has a space, it will automatically fail. Remove any spaces in filenames.");
 		console.add(output, BorderLayout.CENTER);
 
@@ -103,7 +103,7 @@ public class RunVerifier {
 		loc=holder.get(0);
 		output.setText("");
 		output.setAutoscrolls(true);
-		if(loc.substring(loc.length()-1, loc.length()).equals("/")){
+		if(loc.substring(loc.length()-1, loc.length()).equals(File.separator)){
 															//Tests whether the input is a file or directory
 				File count = new File(loc);
             if(count.list()==null)

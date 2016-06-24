@@ -4,7 +4,7 @@
   <groupId>edu.si</groupId>
   <artifactId>eMammal-xmlVerifier</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <name>eMammal-xmlVerifier</name>
   <url>http://maven.apache.org</url>
   <scm>
