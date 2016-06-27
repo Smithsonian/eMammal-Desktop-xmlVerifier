@@ -115,10 +115,10 @@ public class RunVerifier {
             scroll.setPreferredSize(new Dimension(750, 25 * names.length));
             for (int j = names.length - 1; j >= 0; j--) {
                 names[j] = loc + names[j];
-                new XmlVerifier(names[j], log, output);
+                new ManifestVerifier(names[j], log, output);
             }    //Multiple files method
         } else {
-            new XmlVerifier(loc, log, output);    //Single file method
+            new ManifestVerifier(loc, log, output);    //Single file method
         }
         log.close();
         output.append("Verification finished.");

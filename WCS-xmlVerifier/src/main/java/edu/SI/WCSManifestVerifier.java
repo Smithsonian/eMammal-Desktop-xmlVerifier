@@ -46,7 +46,7 @@ import java.util.List;
  * @version 1.0
  * @since 2015-08-21
  */
-public class XmlVerifier {
+public class WCSManifestVerifier {
     /**
      * Checks if the file is valid XML before proceeding with validation
      *
@@ -54,7 +54,7 @@ public class XmlVerifier {
      * @param log      Log file, located as the same directory as the .jar. Detailed output.
      * @param out      Generic output, in this case a JTextarea
      */
-    public XmlVerifier(String filePath, PrintWriter log, JTextArea out) {
+    public WCSManifestVerifier(String filePath, PrintWriter log, JTextArea out) {
         String localPlace;
         String nl = System.getProperty("line.separator");
         String preparedFilePath = prepareFilePath(filePath);
